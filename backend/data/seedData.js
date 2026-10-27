@@ -1,0 +1,585 @@
+const bcrypt = require('bcryptjs');
+
+const getHashedPassword = () => {
+  return bcrypt.hashSync('password123', 10);
+};
+
+const getSeedData = () => {
+  const defaultPasswordHash = getHashedPassword();
+
+  const users = [
+    {
+      _id: 'usr_001',
+      name: 'Dr. Marcus Vance',
+      email: 'manager@plant.safe',
+      password: defaultPasswordHash,
+      role: 'Safety Manager',
+      shift: 'Morning Shift (A)',
+      department: 'HSE & Process Safety',
+      phone: '+1 (555) 234-5678',
+      createdAt: new Date('2025-01-10T08:00:00Z')
+    },
+    {
+      _id: 'usr_002',
+      name: 'Elena Rostova',
+      email: 'operator@plant.safe',
+      password: defaultPasswordHash,
+      role: 'Plant Operator',
+      shift: 'Morning Shift (A)',
+      department: 'Chemical Operations & Synthesis',
+      phone: '+1 (555) 345-6789',
+      createdAt: new Date('2025-01-12T08:00:00Z')
+    },
+    {
+      _id: 'usr_003',
+      name: 'Sarah Chen',
+      email: 'compliance@plant.safe',
+      password: defaultPasswordHash,
+      role: 'Compliance Officer',
+      shift: 'Morning Shift (A)',
+      department: 'Regulatory Compliance & Auditing',
+      phone: '+1 (555) 456-7890',
+      createdAt: new Date('2025-01-15T08:00:00Z')
+    }
+  ];
+
+  const chemicals = [
+    {
+      _id: 'chem_001',
+      name: 'Chlorine Liquid / Gas',
+      formula: 'Cl₂',
+      casNumber: '7782-50-5',
+      hazardClass: 'Toxic Gas',
+      riskLevel: 'Critical',
+      physicalState: 'Gas',
+      storageZone: 'Zone C - High Hazard Gas Vault',
+      quantity: 4200,
+      unit: 'Kilograms',
+      minThreshold: 1500,
+      maxCapacity: 8000,
+      sdsDocumentUrl: 'https://pubchem.ncbi.nlm.nih.gov/compound/Chlorine',
+      ghsPictograms: ['Skull & Crossbones', 'Corrosion', 'Environmental Hazard'],
+      lastInspectionDate: new Date('2026-03-10'),
+      notes: 'Monitored continuously via ambient electro-chemical sensors. Scrubbers operational.',
+      status: 'Needs Inspection',
+      createdAt: new Date('2025-02-01')
+    },
+    {
+      _id: 'chem_002',
+      name: 'Sulfuric Acid 98%',
+      formula: 'H₂SO₄',
+      casNumber: '7664-93-9',
+      hazardClass: 'Corrosive',
+      riskLevel: 'High',
+      physicalState: 'Liquid',
+      storageZone: 'Zone A - Acid Bund & Tank Farm',
+      quantity: 18500,
+      unit: 'Liters',
+      minThreshold: 5000,
+      maxCapacity: 30000,
+      sdsDocumentUrl: 'https://pubchem.ncbi.nlm.nih.gov/compound/Sulfuric-acid',
+      ghsPictograms: ['Corrosion', 'Health Hazard'],
+      lastInspectionDate: new Date('2026-03-25'),
+      notes: 'Secondary containment bund checked. Acid-resistant tile liner intact.',
+      status: 'Optimal',
+      createdAt: new Date('2025-02-02')
+    },
+    {
+      _id: 'chem_003',
+      name: 'Benzene Pure Grade',
+      formula: 'C₆H₆',
+      casNumber: '71-43-2',
+      hazardClass: 'Flammable Liquid',
+      riskLevel: 'Critical',
+      physicalState: 'Liquid',
+      storageZone: 'Zone B - Flammable Solvent Yard',
+      quantity: 12000,
+      unit: 'Liters',
+      minThreshold: 4000,
+      maxCapacity: 20000,
+      sdsDocumentUrl: 'https://pubchem.ncbi.nlm.nih.gov/compound/Benzene',
+      ghsPictograms: ['Flame', 'Health Hazard', 'Exclamation Mark'],
+      lastInspectionDate: new Date('2026-03-14'),
+      notes: 'Class 1 Div 1 explosion-proof environment. Nitrogen blanket active.',
+      status: 'Optimal',
+      createdAt: new Date('2025-02-03')
+    },
+    {
+      _id: 'chem_004',
+      name: 'Anhydrous Ammonia',
+      formula: 'NH₃',
+      casNumber: '7664-41-7',
+      hazardClass: 'Toxic Gas',
+      riskLevel: 'Critical',
+      physicalState: 'Gas',
+      storageZone: 'Zone C - High Hazard Gas Vault',
+      quantity: 6500,
+      unit: 'Kilograms',
+      minThreshold: 2000,
+      maxCapacity: 12000,
+      sdsDocumentUrl: 'https://pubchem.ncbi.nlm.nih.gov/compound/Ammonia',
+      ghsPictograms: ['Flame', 'Skull & Crossbones', 'Corrosion'],
+      lastInspectionDate: new Date('2026-02-28'),
+      notes: 'Cryogenic storage tanks T-301 & T-302. Auto vapor relief system active.',
+      status: 'Optimal',
+      createdAt: new Date('2025-02-04')
+    },
+    {
+      _id: 'chem_005',
+      name: 'Hydrochloric Acid 37%',
+      formula: 'HCl',
+      casNumber: '7647-01-0',
+      hazardClass: 'Corrosive',
+      riskLevel: 'High',
+      physicalState: 'Liquid',
+      storageZone: 'Zone A - Acid Bund & Tank Farm',
+      quantity: 8200,
+      unit: 'Liters',
+      minThreshold: 3000,
+      maxCapacity: 15000,
+      sdsDocumentUrl: 'https://pubchem.ncbi.nlm.nih.gov/compound/Hydrochloric-acid',
+      ghsPictograms: ['Corrosion', 'Exclamation Mark'],
+      lastInspectionDate: new Date('2026-04-01'),
+      notes: 'Fume scrubber discharge pump #2 under preventive servicing.',
+      status: 'Needs Inspection',
+      createdAt: new Date('2025-02-05')
+    },
+    {
+      _id: 'chem_006',
+      name: 'Toluene Tech Grade',
+      formula: 'C₇H₈',
+      casNumber: '108-88-3',
+      hazardClass: 'Flammable Liquid',
+      riskLevel: 'Medium',
+      physicalState: 'Liquid',
+      storageZone: 'Zone B - Flammable Solvent Yard',
+      quantity: 14500,
+      unit: 'Liters',
+      minThreshold: 5000,
+      maxCapacity: 25000,
+      sdsDocumentUrl: 'https://pubchem.ncbi.nlm.nih.gov/compound/Toluene',
+      ghsPictograms: ['Flame', 'Health Hazard', 'Exclamation Mark'],
+      lastInspectionDate: new Date('2026-03-30'),
+      notes: 'Static grounding verified across all discharge points.',
+      status: 'Optimal',
+      createdAt: new Date('2025-02-06')
+    },
+    {
+      _id: 'chem_007',
+      name: 'Sodium Hydroxide 50% Soln',
+      formula: 'NaOH',
+      casNumber: '1310-73-2',
+      hazardClass: 'Corrosive',
+      riskLevel: 'Medium',
+      physicalState: 'Liquid',
+      storageZone: 'Zone D - Wastewater & Neutralization',
+      quantity: 22000,
+      unit: 'Liters',
+      minThreshold: 8000,
+      maxCapacity: 35000,
+      sdsDocumentUrl: 'https://pubchem.ncbi.nlm.nih.gov/compound/Sodium-hydroxide',
+      ghsPictograms: ['Corrosion'],
+      lastInspectionDate: new Date('2026-04-05'),
+      notes: 'Heated piping traced to prevent crystallization at cold ambient temps.',
+      status: 'Optimal',
+      createdAt: new Date('2025-02-07')
+    },
+    {
+      _id: 'chem_008',
+      name: 'Ethylene Oxide Gas',
+      formula: 'C₂H₄O',
+      casNumber: '75-21-8',
+      hazardClass: 'Explosive',
+      riskLevel: 'Critical',
+      physicalState: 'Gas',
+      storageZone: 'Zone E - High Pressure Reactor Bay',
+      quantity: 2100,
+      unit: 'Kilograms',
+      minThreshold: 1000,
+      maxCapacity: 5000,
+      sdsDocumentUrl: 'https://pubchem.ncbi.nlm.nih.gov/compound/Ethylene-oxide',
+      ghsPictograms: ['Flame', 'Exploding Bomb', 'Skull & Crossbones', 'Health Hazard'],
+      lastInspectionDate: new Date('2026-03-12'),
+      notes: 'Stored under inert nitrogen pad at < 10°C.',
+      status: 'Optimal',
+      createdAt: new Date('2025-02-08')
+    },
+    {
+      _id: 'chem_009',
+      name: 'Hydrogen Peroxide 50%',
+      formula: 'H₂O₂',
+      casNumber: '7722-84-1',
+      hazardClass: 'Oxidizer',
+      riskLevel: 'High',
+      physicalState: 'Liquid',
+      storageZone: 'Zone A - Acid Bund & Tank Farm',
+      quantity: 1100,
+      unit: 'Liters',
+      minThreshold: 2000,
+      maxCapacity: 10000,
+      sdsDocumentUrl: 'https://pubchem.ncbi.nlm.nih.gov/compound/Hydrogen-peroxide',
+      ghsPictograms: ['Flame Over Circle', 'Corrosion', 'Exclamation Mark'],
+      lastInspectionDate: new Date('2026-03-18'),
+      notes: 'Vented caps on containers inspected. Stock is below safety replenishment minimum threshold.',
+      status: 'Low Stock',
+      createdAt: new Date('2025-02-09')
+    }
+  ];
+
+  const inspections = [
+    {
+      _id: 'insp_001',
+      inspectionCode: 'INSP-2026-081',
+      title: 'Quarterly Pressure Relief Valve (PRV) Bench Calibration',
+      inspectionType: 'High-Hazard Audit',
+      zone: 'Zone C - High Hazard Gas Vault',
+      inspectorName: 'Dr. Marcus Vance',
+      inspectorRole: 'Lead Process Safety Engineer',
+      scheduledDate: new Date('2026-04-20'),
+      completedDate: null,
+      status: 'Pending',
+      riskScore: 88,
+      findings: 'Awaiting scheduled shutdown slot for PRV-102 & PRV-104 calibration certification.',
+      actionItems: ['Lockout/Tagout valve block', 'Bench pop test', 'Replace PTFE diaphragms'],
+      passed: null,
+      createdAt: new Date('2026-04-01')
+    },
+    {
+      _id: 'insp_002',
+      inspectionCode: 'INSP-2026-079',
+      title: 'Chlorine Emergency Scrubber & Water Curtain Test',
+      inspectionType: 'Emergency Equipment',
+      zone: 'Zone C - High Hazard Gas Vault',
+      inspectorName: 'Elena Rostova',
+      inspectorRole: 'Plant Operator',
+      scheduledDate: new Date('2026-04-10'),
+      completedDate: new Date('2026-04-10'),
+      status: 'Completed',
+      riskScore: 25,
+      findings: 'Caustic scrubber circulation pump kicked on in 1.4 seconds. Airflow dampers sealed effectively.',
+      actionItems: ['Refill secondary caustic reserve tank to 100%'],
+      passed: true,
+      createdAt: new Date('2026-04-02')
+    },
+    {
+      _id: 'insp_003',
+      inspectionCode: 'INSP-2026-077',
+      title: 'Zone B Flammable Deluge Foam Suppression Audit',
+      inspectionType: 'Routine Safety',
+      zone: 'Zone B - Flammable Solvent Yard',
+      inspectorName: 'Chief Fire Inspector Hayes',
+      inspectorRole: 'External Fire Auditor',
+      scheduledDate: new Date('2026-04-08'),
+      completedDate: new Date('2026-04-08'),
+      status: 'Completed',
+      riskScore: 18,
+      findings: 'AFFF 3% concentrate viscosity within NFPA 11 limits. Water supply pressure 125 PSI.',
+      actionItems: ['Clean strainer on nozzle line 4'],
+      passed: true,
+      createdAt: new Date('2026-03-28')
+    },
+    {
+      _id: 'insp_004',
+      inspectionCode: 'INSP-2026-075',
+      title: 'Acid Storage Tank T-104 Ultrasonic Thickness Testing',
+      inspectionType: 'Equipment Integrity',
+      zone: 'Zone A - Acid Bund & Tank Farm',
+      inspectorName: 'Apex NDT Services Ltd',
+      inspectorRole: 'NDT Specialist',
+      scheduledDate: new Date('2026-04-02'),
+      completedDate: new Date('2026-04-02'),
+      status: 'Failed',
+      riskScore: 78,
+      findings: 'Localized pitting corrosion observed on lower shell course. Wall thickness decreased to 6.2mm (Min design 6.5mm).',
+      actionItems: ['De-rate max operating capacity immediately to 50%', 'Schedule patch weld or composite wrap by April 30'],
+      passed: false,
+      createdAt: new Date('2026-03-20')
+    },
+    {
+      _id: 'insp_005',
+      inspectionCode: 'INSP-2026-072',
+      title: 'Zone D Safety Shower & Eyewash Station Weekly Flow Audit',
+      inspectionType: 'Emergency Equipment',
+      zone: 'Zone D - Wastewater & Neutralization',
+      inspectorName: 'Elena Rostova',
+      inspectorRole: 'Plant Operator',
+      scheduledDate: new Date('2026-04-05'),
+      completedDate: null,
+      status: 'Overdue',
+      riskScore: 65,
+      findings: 'Inspection missed due to unpredicted wastewater clarifier maintenance.',
+      actionItems: ['Perform 3-minute flush immediately', 'Log water clarity and tepid temp (16-38°C)'],
+      passed: null,
+      createdAt: new Date('2026-03-31')
+    },
+    {
+      _id: 'insp_006',
+      inspectionCode: 'INSP-2026-083',
+      title: 'Pre-Startup Safety Review (PSSR) for Reactor Unit R-202',
+      inspectionType: 'Pre-Startup Review',
+      zone: 'Zone E - High Pressure Reactor Bay',
+      inspectorName: 'Dr. Marcus Vance',
+      inspectorRole: 'Safety Manager',
+      scheduledDate: new Date('2026-04-25'),
+      completedDate: null,
+      status: 'Pending',
+      riskScore: 82,
+      findings: 'Review interlocks, rupture disk burst indicators, and emergency cooling valve loops.',
+      actionItems: ['Verify SIS loop integrity test', 'Sign off operating procedures'],
+      passed: null,
+      createdAt: new Date('2026-04-12')
+    }
+  ];
+
+  const incidents = [
+    {
+      _id: 'inc_001',
+      incidentCode: 'INC-2026-104',
+      title: 'Secondary Containment Transfer Pump Gasket Seepage - Nitric Acid',
+      incidentType: 'Chemical Leak',
+      severity: 'Medium',
+      chemicalInvolved: 'Nitric Acid 68%',
+      zone: 'Zone A - Acid Bund & Tank Farm',
+      reportedBy: 'Elena Rostova',
+      reportDate: new Date('2026-04-14T09:30:00Z'),
+      status: 'Contained',
+      casualties: 0,
+      immediateAction: 'Transfer pump isolated via remote ESD-03. Acid neutralizer spread applied to bund sump. 45 liters recovered in hazmat tote.',
+      rootCause: 'Viton gasket degradation due to prolonged temperature cycling.',
+      containmentDuration: '22 minutes',
+      createdAt: new Date('2026-04-14T09:35:00Z')
+    },
+    {
+      _id: 'inc_002',
+      incidentCode: 'INC-2026-102',
+      title: 'Toluene Transfer Line Flange Spark During Grounding Clamp Disconnect',
+      incidentType: 'Fire Outbreak Risk',
+      severity: 'High',
+      chemicalInvolved: 'Toluene Tech Grade',
+      zone: 'Zone B - Flammable Solvent Yard',
+      reportedBy: 'Dave Reynolds (Shift Lead)',
+      reportDate: new Date('2026-04-09T14:15:00Z'),
+      status: 'Under Investigation',
+      casualties: 0,
+      immediateAction: 'Immediate dry chemical extinguisher stand-by. Tanker offloading suspended. Vapor sniffing with PID reader confirmed 0 ppm LEL.',
+      rootCause: 'Grounding cable clamp copper jaw corroded, creating high resistance discharge.',
+      containmentDuration: 'Immediate',
+      createdAt: new Date('2026-04-09T14:20:00Z')
+    },
+    {
+      _id: 'inc_003',
+      incidentCode: 'INC-2026-098',
+      title: 'Forklift Fork Puncture on Plastic IBC Tote',
+      incidentType: 'Spill',
+      severity: 'Low',
+      chemicalInvolved: 'Sodium Hydroxide 50% Soln',
+      zone: 'Zone D - Wastewater & Neutralization',
+      reportedBy: 'Carlos Mendes',
+      reportDate: new Date('2026-03-29T11:00:00Z'),
+      status: 'Resolved',
+      casualties: 0,
+      immediateAction: 'Spill containment socks placed. Liquid pumped into standby composite tote within 15 minutes. Area flushed with water.',
+      rootCause: 'Forklift operator turned too sharply inside aisle bay D-4.',
+      containmentDuration: '18 minutes',
+      createdAt: new Date('2026-03-29T11:10:00Z')
+    },
+    {
+      _id: 'inc_004',
+      incidentCode: 'INC-2026-095',
+      title: 'Chlorine Sensor A-04 Micro-Leak Spike (1.2 ppm)',
+      incidentType: 'Toxic Vapor Release',
+      severity: 'High',
+      chemicalInvolved: 'Chlorine Liquid / Gas',
+      zone: 'Zone C - High Hazard Gas Vault',
+      reportedBy: 'DCS Automated Alert System',
+      reportDate: new Date('2026-03-22T03:40:00Z'),
+      status: 'Closed',
+      casualties: 0,
+      immediateAction: 'Automated scrubber fan high-speed boost activated. Control room operator triggered pneumatic valve isolate V-12.',
+      rootCause: 'Packing gland seal on cylinder manifold #3 required 1/4 turn torque adjustment.',
+      containmentDuration: '8 minutes',
+      createdAt: new Date('2026-03-22T03:45:00Z')
+    }
+  ];
+
+  const emergencyProtocols = [
+    {
+      _id: 'ep_001',
+      code: 'SOP-EMERG-01',
+      title: 'Catastrophic Toxic Vapor Release (Chlorine / Anhydrous Ammonia)',
+      category: 'Gas Release',
+      alertLevel: 'Level 2 - Plant Evacuation',
+      triggerConditions: 'Ambient vapor concentration > 3 ppm Chlorine or > 25 ppm Ammonia at perimeter sensors or direct tank rupture.',
+      steps: [
+        { stepNumber: 1, action: 'Sound Continuous Warble Siren & trigger Plant-Wide Emergency Beacon', assignedRole: 'Control Room Supervisor', isCrucial: true },
+        { stepNumber: 2, action: 'Auto-activate Deluge Water Curtains and caustic scrubber exhaust in Zone C', assignedRole: 'DCS Operator', isCrucial: true },
+        { stepNumber: 3, action: 'Determine Wind Direction via ultrasonic anemometer; Broadcast Upwind Muster Point (North Point A or South Point B)', assignedRole: 'Safety Incident Commander', isCrucial: true },
+        { stepNumber: 4, action: 'Deploy Hazmat Entry Team equipped with Level A Encapsulated Suits & SCBA (Positive Pressure)', assignedRole: 'Hazmat Response Unit', isCrucial: true },
+        { stepNumber: 5, action: 'Notify Municipal Emergency Services (911) & Local Emergency Planning Committee (LEPC)', assignedRole: 'EHS Director', isCrucial: false }
+      ],
+      musterPoints: ['Muster Station North (Upwind Primary)', 'Muster Station South-East (Secondary Gate)', 'Main Admin Shelter-In-Place Bunker'],
+      emergencyContacts: [
+        { role: 'Incident Commander', name: 'Dr. Marcus Vance', phone: '+1 (555) 911-0101' },
+        { role: 'Hazmat Team Lead', name: 'Commander Travis Cole', phone: '+1 (555) 911-0102' },
+        { role: 'Municipal Fire Dispatch', name: 'Metro Industrial Fire Dept', phone: '+1 (555) 911-FIRE' },
+        { role: 'Poison & Toxic Hotline', name: 'CHEMTREC Emergency Desk', phone: '+1 (800) 424-9300' }
+      ],
+      isActive: false
+    },
+    {
+      _id: 'ep_002',
+      code: 'SOP-EMERG-02',
+      title: 'Flammable Solvent Storage Fire & Vapor Cloud Explosion Containment',
+      category: 'Fire & Explosion',
+      alertLevel: 'Level 2 - Plant Evacuation',
+      triggerConditions: 'IR Flame Detector tripped in Zone B or explosive LEL > 20% with thermal flash.',
+      steps: [
+        { stepNumber: 1, action: 'Hit Emergency Shutdown ESD-ZoneB to isolate hydrocarbon feed pumps and pipelines', assignedRole: 'Field Operator', isCrucial: true },
+        { stepNumber: 2, action: 'Activate Fixed Foam-Water Deluge Monitor System across Tank Farm B', assignedRole: 'Control Room', isCrucial: true },
+        { stepNumber: 3, action: 'Establish 300-meter safety isolation perimeter and cut all electrical grid feeds to Zone B', assignedRole: 'Plant Security', isCrucial: true },
+        { stepNumber: 4, action: 'Cool adjacent storage tanks (T-201, T-202) with water spray cooling rings to prevent BLEVE', assignedRole: 'Industrial Fire Brigade', isCrucial: true }
+      ],
+      musterPoints: ['Muster Station West Gate', 'Muster Station North (Upwind)'],
+      emergencyContacts: [
+        { role: 'Fire Brigade Captain', name: 'Ray Delgado', phone: '+1 (555) 911-0103' },
+        { role: 'Process Safety Specialist', name: 'Sarah Chen', phone: '+1 (555) 911-0104' }
+      ],
+      isActive: false
+    },
+    {
+      _id: 'ep_003',
+      code: 'SOP-EMERG-03',
+      title: 'Concentrated Acid Secondary Containment Rupture & Spillage',
+      category: 'Chemical Spill',
+      alertLevel: 'Level 1 - Internal Alert',
+      triggerConditions: 'Liquid level sensor in Bund A detects > 500L liquid or visual breach of primary containment.',
+      steps: [
+        { stepNumber: 1, action: 'Isolate transfer lines and shut emergency motorized valves V-101 and V-102', assignedRole: 'Control Room', isCrucial: true },
+        { stepNumber: 2, action: 'Deploy sodium bicarbonate / limestone neutralizer hopper to containment bund', assignedRole: 'Hazmat Unit', isCrucial: true },
+        { stepNumber: 3, action: 'Route spill effluent to Emergency Neutralization Retention Lagoon #2 via diversion weir', assignedRole: 'Wastewater Lead', isCrucial: true },
+        { stepNumber: 4, action: 'Check pH runoff continuously until reading stabilizes between 6.5 and 8.5', assignedRole: 'Lab Chemist', isCrucial: false }
+      ],
+      musterPoints: ['Zone A Safe Assembly Area', 'Main Admin Shelter'],
+      emergencyContacts: [
+        { role: 'Environmental Coordinator', name: 'Laura Bailey', phone: '+1 (555) 911-0105' },
+        { role: 'Spill Response Foreman', name: 'Jim Kowalski', phone: '+1 (555) 911-0106' }
+      ],
+      isActive: false
+    },
+    {
+      _id: 'ep_004',
+      code: 'SOP-EMERG-04',
+      title: 'Reactor Runaway Exotherm & Thermal Pressure Surge Mitigation',
+      category: 'Runaway Reaction',
+      alertLevel: 'Level 2 - Plant Evacuation',
+      triggerConditions: 'Reactor R-201 core temperature rate of rise > 4°C/min or jacket coolant delta-T inversion.',
+      steps: [
+        { stepNumber: 1, action: 'Inject Short-Stop Chemical Inhibitor via nitrogen pressurized emergency dump', assignedRole: 'Reactor Operator', isCrucial: true },
+        { stepNumber: 2, action: 'Flood reactor jacket with emergency chilled glycol circulation loop', assignedRole: 'Utility Engineer', isCrucial: true },
+        { stepNumber: 3, action: 'Clear reactor perimeter (100m) in anticipation of rupture disk blowdown into containment flare knockout drum', assignedRole: 'Floor Lead', isCrucial: true }
+      ],
+      musterPoints: ['Muster Station North Gate', 'Shelter-In-Place Bunker'],
+      emergencyContacts: [
+        { role: 'Chief Chemical Engineer', name: 'Dr. Kevin Zhao', phone: '+1 (555) 911-0107' }
+      ],
+      isActive: false
+    }
+  ];
+
+  const compliance = [
+    {
+      _id: 'comp_001',
+      certCode: 'CERT-OSHA-2026',
+      certificateName: 'OSHA 29 CFR 1910.119 - Process Safety Management (PSM) Certification',
+      regulatoryBody: 'OSHA',
+      standardOrAct: 'OSHA Standard 29 CFR 1910.119',
+      issueDate: new Date('2024-05-15'),
+      expiryDate: new Date('2027-05-14'),
+      renewalWindowDays: 90,
+      status: 'Valid',
+      inspectorOrAuditor: 'Federal OSHA Industrial Safety Board',
+      notes: 'Full 14-element PSM compliance verified during triennial comprehensive review.',
+      complianceScore: 97,
+      createdAt: new Date('2024-05-16')
+    },
+    {
+      _id: 'comp_002',
+      certCode: 'CERT-EPA-RMP-2026',
+      certificateName: 'EPA Risk Management Plan (RMP) Facility Program 3 Certification',
+      regulatoryBody: 'EPA',
+      standardOrAct: 'Clean Air Act Section 112(r)',
+      issueDate: new Date('2023-08-01'),
+      expiryDate: new Date('2028-07-31'),
+      renewalWindowDays: 120,
+      status: 'Valid',
+      inspectorOrAuditor: 'US EPA Region 5 Enforcement Division',
+      notes: 'Worst-case release scenarios modeled and registered with local responders.',
+      complianceScore: 94,
+      createdAt: new Date('2023-08-02')
+    },
+    {
+      _id: 'comp_003',
+      certCode: 'CERT-ISO-45001',
+      certificateName: 'ISO 45001:2018 Occupational Health & Safety Management Systems',
+      regulatoryBody: 'ISO',
+      standardOrAct: 'ISO 45001:2018',
+      issueDate: new Date('2023-05-10'),
+      expiryDate: new Date('2026-05-09'),
+      renewalWindowDays: 60,
+      status: 'Expiring Soon',
+      inspectorOrAuditor: 'Bureau Veritas Certification Group',
+      notes: 'Recertification audit scheduled for next month. Document review package 85% complete.',
+      complianceScore: 92,
+      createdAt: new Date('2023-05-11')
+    },
+    {
+      _id: 'comp_004',
+      certCode: 'CERT-FIRE-NOC-2025',
+      certificateName: 'Municipal Fire Prevention & Chemical Hazard Storage NOC License',
+      regulatoryBody: 'Fire Dept NOC',
+      standardOrAct: 'NFPA 30 & 704 Codes',
+      issueDate: new Date('2025-06-01'),
+      expiryDate: new Date('2026-05-31'),
+      renewalWindowDays: 45,
+      status: 'Expiring Soon',
+      inspectorOrAuditor: 'Metro Fire Protection Authority',
+      notes: 'Annual water deluge and hydrant pressure inspection renewal due before May 31.',
+      complianceScore: 89,
+      createdAt: new Date('2025-06-02')
+    },
+    {
+      _id: 'comp_005',
+      certCode: 'CERT-ENV-EFF-2024',
+      certificateName: 'Industrial Effluent Discharge & Zero-Liquid-Discharge (ZLD) Permit',
+      regulatoryBody: 'State Pollution Board',
+      standardOrAct: 'Clean Water Act Sec 402 - NPDES',
+      issueDate: new Date('2024-03-01'),
+      expiryDate: new Date('2026-02-28'),
+      renewalWindowDays: 30,
+      status: 'Expired',
+      inspectorOrAuditor: 'State Environmental Protection Agency',
+      notes: 'Renewal application submitted on March 15 under review; interim operational extension letter on file.',
+      complianceScore: 81,
+      createdAt: new Date('2024-03-02')
+    },
+    {
+      _id: 'comp_006',
+      certCode: 'CERT-ASME-BPVC',
+      certificateName: 'ASME Boiler and Pressure Vessel Code (BPVC) Section VIII Stamp',
+      regulatoryBody: 'State Boiler Inspectorate',
+      standardOrAct: 'ASME Boiler & Pressure Vessel Code',
+      issueDate: new Date('2023-11-20'),
+      expiryDate: new Date('2026-11-19'),
+      renewalWindowDays: 90,
+      status: 'Valid',
+      inspectorOrAuditor: 'National Board of Boiler Inspectors',
+      notes: 'All 8 process reactors stamped and hydrostatically recertified.',
+      complianceScore: 98,
+      createdAt: new Date('2023-11-21')
+    }
+  ];
+
+  return { users, chemicals, inspections, incidents, emergencyProtocols, compliance };
+};
+
+module.exports = { getSeedData };

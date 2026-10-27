@@ -1,0 +1,21 @@
+{
+  "name": "chemical-plant-safety-system",
+  "version": "1.0.0",
+  "description": "Chemical Plant Safety Management System - Full Stack Application",
+  "scripts": {
+    "start": "node backend/server.js",
+    "server": "node --watch backend/server.js",
+    "client": "npm.cmd --prefix frontend run dev",
+    "install:all": "npm.cmd --prefix backend install && npm.cmd --prefix frontend install"
+  },
+  "keywords": [
+    "chemical-plant",
+    "safety-management",
+    "react",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "ISC"
+}
